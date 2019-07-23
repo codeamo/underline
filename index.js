@@ -33,7 +33,7 @@ _.last = function (array, n) {
 // Produces a duplicate-free version of the array, using === to test equality.
 // In particular only the first occurence of each value is kept.
 _.uniq = function (array) {
-  let un = [];
+  let filtred = [];
   for (let i =0; i < array.length; i++) {
     if (un.includes(array[i]) === false) {
       if (array[i] === array[i+1]) {
@@ -43,7 +43,7 @@ _.uniq = function (array) {
       }
     } 
   }
-  return un;
+  return filtred;
 };
 
 // OBJECTS
