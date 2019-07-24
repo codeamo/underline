@@ -7,8 +7,11 @@ var _ = {};
 // Returns an array with the first n elements of an array.
 // If n is not provided it returns an array with just the first element.
 _.first = function (array, n) {
-  if (Array.isArray(array) === false) {
+  if (!array || !array.length) {
     return [];
+  } else if (Array.isArray(array) === false) {
+    return Array.prototype.slice.call(array, 0,n);
+    //return [];
   } else if (n <= 0 || typeof n !== 'number') {
     return array.slice(0,1);
   } else {
@@ -35,11 +38,11 @@ _.last = function (array, n) {
 _.uniq = function (array) {
   let filtred = [];
   for (let i =0; i < array.length; i++) {
-    if (un.includes(array[i]) === false) {
+    if (filtred.includes(array[i]) === false) {
       if (array[i] === array[i+1]) {
-        un.push(array[i]);
+        filtred.push(array[i]);
       } else if (array[i] !== array[i+1]) {
-        un.push(array[i]);
+        filtred.push(array[i]);
       }
     } 
   }
@@ -52,7 +55,10 @@ _.uniq = function (array) {
 // Copies all the own enumerable properties in the source object over
 // to the destination object, and returns it (without using `Object.assign`).
 _.extend = function (destination, source) {
-
+  for (key in source) {
+    destination += key;
+  }
+  return destination;
 };
 
 // _.defaults(destination, source)
@@ -65,13 +71,28 @@ _.defaults = function (destination, source) {
 
 // COLLECTIONS
 
-// _.each(collection, iteratee, [context])
+// _.each(collec  tion, iteratee, [context])
 // Iterates over a collection of elements (i.e. array or object),
 // yielding each in turn to an iteratee function, that is called with three arguments:
 // (element, index|key, collection), and bound to the context if one is passed.
 // Returns the collection for chaining.
 _.each = function (collection, iteratee, context) {
+  //const bindIteratee = iteratee.bind(context);
 
+  if (Array.isArray(collection)) {
+    // console.log(collection);
+    for (let i=0; i < collection.length; i++) {
+      iteratee.call(context,collection[i], i, collection);
+    }
+  }  else {
+    for (let key in collection) {
+      if (collection.hasOwnProperty(key)) {
+        iteratee.call(context,collection[key], key, collection);
+      }
+    }
+
+  }
+  return collection;
 };
 
 // _.contains(collection, value)
