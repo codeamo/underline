@@ -23,8 +23,11 @@ _.first = function (array, n) {
 // Returns an array with the last n elements of an array.
 // If n is not provided it returns an array with just the last element.
 _.last = function (array, n) {
-  if (Array.isArray(array) === false) {
+  if (!array || !array.length) {
     return [];
+  } else if (Array.isArray(array) === false) {
+    return Array.prototype.slice.call(array, -n);
+    //return [];
   } else if (n <= 0 || typeof n !== 'number') {
     return array.slice(-1);
   } else {
@@ -86,7 +89,7 @@ _.each = function (collection, iteratee, context) {
     }
   }  else {
     for (let key in collection) {
-      if (collection.hasOwnProperty(key)) {
+      if (collection.hasOwnProperty(key)) {//returns a boolean indicating whether the object has the specified property as its own property (as opposed to inheriting it)
         iteratee.call(context,collection[key], key, collection);
       }
     }
