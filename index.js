@@ -58,8 +58,10 @@ _.uniq = function (array) {
 // Copies all the own enumerable properties in the source object over
 // to the destination object, and returns it (without using `Object.assign`).
 _.extend = function (destination, source) {
-  for (key in source) {
-    destination += key;
+  for (let key in source) {
+    if (source.hasOwnProperty(key)) {
+      destination[key] = source[key];
+    }
   }
   return destination;
 };
@@ -69,6 +71,14 @@ _.extend = function (destination, source) {
 // with own enumerable properties present in the source object,
 // and returns the destination object.
 _.defaults = function (destination, source) {
+  for (let key in source) {
+    if(source.hasOwnProperty(key)) {
+      if (destination[key] === undefined) {
+        destination[key] = source[key];
+      }
+    }
+  }
+  return destination;
 
 };
 
@@ -114,7 +124,13 @@ _.contains = function (collection, value) {
 // Each invocation of iteratee is called with three arguments:
 // (element, index|key, collection), and bound to the context if one is passed.
 _.map = function (collection, iteratee, context) {
-
+  let newArr = [];
+  
+  _.each(collection, function (element, index) {
+    newArr.push(iteratee.call(context, element, index, collection));
+  });
+  
+  return newArr;
 };
 
 // _.reduce(collection, iteratee, [accumulator], [context])
@@ -126,7 +142,9 @@ _.map = function (collection, iteratee, context) {
 // to the initial invocation of reduce, iteratee is not invoked on the first element,
 // and the first element is instead passed as accumulator for the next invocation.
 _.reduce = function (collection, iteratee, accumulator, context) {
-
+  _.each(collection, function (element, index) {
+    
+  });
 };
 
 // _.filter(collection, predicate, [context])
