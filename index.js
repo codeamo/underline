@@ -215,7 +215,15 @@ _.every = function (collection, predicate, context) {
 // Short-circuits and stops traversing the list if a true element is found.
 // TIP: what method that you have already implemented can be reused here?
 _.some = function (collection, predicate, context) {
+  let result = false;
 
+  _.each(collection, function (element, index) {
+    if (predicate.call(context, element, index, collection)) {
+      return result = true;
+    } 
+  });
+
+  return result;
 };
 
 // _.invoke(collection, methodName, *arguments)
@@ -223,7 +231,15 @@ _.some = function (collection, predicate, context) {
 // indicated by methodName on each value in the collection.
 // Any extra arguments passed to invoke will be forwarded on to the method invocation.
 _.invoke = function (collection, methodName) {
+  let newArr = [];
+  const args = Array.prototype.slice.call(arguments, 2);
 
+  _.each(collection, function (element, index, collection) {
+    const result = element[methodName](...args);
+    newArr.push(result);
+  });
+  
+  return newArr;
 };
 
 // _.pluck(collection, propertyName)
@@ -232,7 +248,13 @@ _.invoke = function (collection, methodName) {
 // in the collection, and returns an array with all the values
 // corresponding to the property indicated by propertyName.
 _.pluck = function (collection, propertyName) {
+  let newArr = [];
 
+  _.each(collection, function (element, key) {
+    newArr.push(collection[key][propertyName]);
+  });
+  
+  return newArr;
 };
 
 // FUNCTIONS
