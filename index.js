@@ -72,7 +72,7 @@ _.extend = function (destination, source) {
 // and returns the destination object.
 _.defaults = function (destination, source) {
   for (let key in source) {
-    if(source.hasOwnProperty(key)) {
+    if (source.hasOwnProperty(key)) {
       if (destination[key] === undefined) {
         destination[key] = source[key];
       }
@@ -91,13 +91,14 @@ _.defaults = function (destination, source) {
 // Returns the collection for chaining.
 _.each = function (collection, iteratee, context) {
   //const bindIteratee = iteratee.bind(context);
-
+  //should ignore the object prototype
   if (Array.isArray(collection)) {
-    // console.log(collection);
+    //should iterate over an array
     for (let i=0; i < collection.length; i++) {
       iteratee.call(context,collection[i], i, collection);
     }
   }  else {
+    //should iterate over an object
     for (let key in collection) {
       if (collection.hasOwnProperty(key)) {//returns a boolean indicating whether the object has the specified property as its own property (as opposed to inheriting it)
         iteratee.call(context,collection[key], key, collection);
@@ -105,6 +106,7 @@ _.each = function (collection, iteratee, context) {
     }
 
   }
+  //should return the collection
   return collection;
 };
 
@@ -113,9 +115,11 @@ _.each = function (collection, iteratee, context) {
 // TIP: here's a demo of how you can re-use already implemented methods in clever ways.
 _.contains = function (collection, value) {
   var res = [];
+
   _.each(collection, function (el, key) {
     el === value && res.push(key);
   });
+
   return res;
 };
 
@@ -143,8 +147,14 @@ _.map = function (collection, iteratee, context) {
 // and the first element is instead passed as accumulator for the next invocation.
 _.reduce = function (collection, iteratee, accumulator, context) {
   _.each(collection, function (element, index) {
-    
+    if (accumulator === undefined) {
+      accumulator = element;
+    } else {
+      accumulator = iteratee.call(context, accumulator, element, index, collection);
+    }
   });
+
+  return accumulator;
 };
 
 // _.filter(collection, predicate, [context])
@@ -152,7 +162,15 @@ _.reduce = function (collection, iteratee, accumulator, context) {
 // that pass a truth test (predicate). Predicate is called with three arguments:
 // (element, index|key, collection), and bound to the context if one is passed.
 _.filter = function (collection, predicate, context) {
+  let newArr = [];
 
+  _.each(collection, function (element, index) {
+    if (predicate.call(context, element, index, collection)) {
+      newArr.push(element);
+    }
+  });
+
+  return newArr;
 };
 
 // _.reject(collection, predicate, [context])
@@ -161,7 +179,15 @@ _.filter = function (collection, predicate, context) {
 // (element, index|key, collection), and bound to the context if one is passed.
 // TIP: can you reuse _.filter()?
 _.reject = function (collection, predicate, context) {
+  let newArr = [];
 
+  _.each(collection, function (element, index) {
+    if (!predicate.call(context, element, index, collection)) {
+      newArr.push(element);
+    }
+  });
+
+  return newArr;
 };
 
 // _.every(collection, [predicate], [context])
@@ -172,7 +198,14 @@ _.reject = function (collection, predicate, context) {
 // TIP: without the short-circuiting you could reuse _.reduce(). Can you figure how?
 // Because of the short-circuiting though, you need to re-implement a modified _.each().
 _.every = function (collection, predicate, context) {
+  let result = true;
 
+  _.each(collection, function (element, index) {
+    if (!predicate.call(context, element, index, collection)) {
+      return result = false;
+    } 
+  });
+  return result;
 };
 
 // _.some(collection, [predicate], [context])
