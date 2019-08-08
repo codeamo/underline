@@ -202,7 +202,7 @@ _.every = function (collection, predicate, context) {
 
   _.each(collection, function (element, index) {
     if (!predicate.call(context, element, index, collection)) {
-      return result = false;
+      result = false;
     } 
   });
   return result;
@@ -253,7 +253,7 @@ _.pluck = function (collection, propertyName) {
   _.each(collection, function (element, key) {
     newArr.push(collection[key][propertyName]);
   });
-  
+
   return newArr;
 };
 
@@ -265,7 +265,17 @@ _.pluck = function (collection, propertyName) {
 // returning the value from the original call. Useful for initialization functions,
 // instead of having to set a boolean flag and then check it later.
 _.once = function (func) {
-
+  let call =  false;
+  let res;
+  return function () {
+    if (!call) {
+      res = func.apply(this, arguments);
+      call = true;
+      return res;
+    } else {
+      return res;
+    }
+  };
 };
 
 // _.memoize(func)
@@ -276,7 +286,7 @@ _.once = function (func) {
 // will check if it has already computed the result for the given argument
 // and return that value instead of recomputing it.
 _.memoize = function (func) {
-
+  
 };
 
 // _.delay(function, wait, *arguments)
@@ -284,7 +294,7 @@ _.memoize = function (func) {
 // If you pass the optional arguments, they will be forwarded
 // on to the function when it is invoked.
 _.delay = function (func, wait) {
-
+  
 };
 
 // _.throttle(function, wait)
@@ -294,7 +304,7 @@ _.delay = function (func, wait) {
 // just return the last computed result. Useful for rate-limiting
 // events that occur faster than you can keep up with.
 _.throttle = function (func, wait) {
-
+  
 };
 
 // Allow tests to run on the server (leave at the bottom)
